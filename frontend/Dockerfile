@@ -17,8 +17,10 @@ COPY . /code
 CMD ["npm", "run", "dev"]
 
 FROM development AS builder
+RUN ls -la /code
 
 RUN npm run build
+RUN ls -la /code
 
 FROM development as dev-envs
 RUN <<EOF
