@@ -1,27 +1,15 @@
-version: 2
 services:
   - name: frontend
+    type: web
     plan:
-      - type: web
-        env: development
-        buildCommand: |
-          FROM node:18.3 AS development
-
-          RUN npm install -g nodemon
-
-          ENV CI=true
-          ENV PORT=3000
-
-          WORKDIR /code
-          COPY frontend/package.json /code/package.json
-          RUN npm install
-          COPY frontend /code
-
-          CMD ["npm", "run", "dev"]
-        envVars:
-          - key: CHOKIDAR_USEPOLLING
-            value: "true"
-        routes:
-          - type: http
-            sourcePath: /
-            destPort: 3000
+      - build:
+          name: frontend
+          dockerfile: frontend/Dockerfile
+          context: .
+          target: development
+      - startCommand: npm run start
+    envVars:
+      - key: CHOKIDAR_USEPOLLING
+        value: "true"
+    ports:
+      - port: 3000
